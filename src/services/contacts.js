@@ -1,30 +1,21 @@
-import { Schema } from "mongoose";
-import { model } from 'mongoose';
+import Contact from '../model/contacts.js'
 
-const contactsSchema = new Schema({
+export const createContact = async (payload) => {
+    const contact = await Contact.create(payload);
+    return contact;
+};
 
-    name: {
-        type: String,
-        required: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-    },
-    isFavourite: {
-        type: Boolean,
-        default: false,
-    },
-    contactType: {
-        type: String,
-        enum: ['work', 'home', 'personal'],
-        required: true,
-        default: 'personal'
-    }
-}, { timestamps: true });
+export const updateContactById = async (contactId, updateData) => {
+    const updated = await Contact.findByIdAndUpdate(contactId, updateData, {
+        new: true,
+        runValidators: true
+    });
 
-export const Contact = model('contact', contactsSchema);
+    return updated;
+};
+
+export const removeContactById = async (contactId) => {
+    const deleted = await Contact.findByIdAndDelete(contactId);
+    return deleted;
+};
 

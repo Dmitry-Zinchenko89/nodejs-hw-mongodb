@@ -8,7 +8,7 @@ export const initMongoConnection = async () => {
     const password = getEnvVar(ENV_VARS.MONGODB_PASSWORD);
     const url = getEnvVar(ENV_VARS.MONGODB_URL);
     const db = getEnvVar(ENV_VARS.MONGODB_DB);
-    const uri = `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Cluster0`
+    const uri = `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=nodejs-hw-mongodb`
     try {
         await connect(uri);
         await connection.db.admin().command({ ping: 1 });
