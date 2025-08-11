@@ -5,17 +5,16 @@ export const createContact = async (payload) => {
     return contact;
 };
 
-export const updateContactById = async (contactId, updateData) => {
-    const updated = await Contact.findByIdAndUpdate(contactId, updateData, {
-        new: true,
-        runValidators: true
-    });
+export const updateContact = async (contactId, payload) => {
+    const contact = await Contact.findOneAndUpdate({ _id: contactId }, payload,
+        { new: true },
+    );
 
-    return updated;
+    return contact;
 };
 
-export const removeContactById = async (contactId) => {
-    const deleted = await Contact.findByIdAndDelete(contactId);
-    return deleted;
+export const deleteContact = async (contactId) => {
+    const contact = await Contact.findOneAndDelete({ _id: contactId });
+    return contact;
 };
 
