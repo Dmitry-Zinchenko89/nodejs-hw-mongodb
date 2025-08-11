@@ -4,7 +4,7 @@ import {
     getContacts,
     getContacBytId,
     createContactController,
-    patchContactById,
+    updateContactById,
     deleteContactById
 } from "../controllers/contacts.js";
 
@@ -16,7 +16,7 @@ contactsRouter.get('/contacts/:contactId', ctrlWrapper(getContacBytId));
 
 contactsRouter.post('/contacts', ctrlWrapper(createContactController));
 
-contactsRouter.patch('/contacts/:contactId', ctrlWrapper(patchContactById));
+contactsRouter.patch('/contacts/:contactId', ctrlWrapper(updateContactById));
 
 contactsRouter.delete('/contacts/:contactId', ctrlWrapper(deleteContactById));
 
