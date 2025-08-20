@@ -4,10 +4,22 @@ import { Contact } from "../model/contacts.js";
 import { createContact } from '../services/contacts.js';
 import { updateContact } from '../services/contacts.js';
 import { deleteContact } from '../services/contacts.js';
+import { getAllContacts } from "../services/contacts.js";
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import { parseSortParams } from '../utils/parseSortParams.js';
+
 
 
 export const getContacts = async (req, res) => {
-    const contacts = await Contact.find();
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query);
+    const contacts = await getAllContacts({
+        page,
+        perPage,
+        sortBy,
+        sortOrder,
+    });
+
     res.json({
         status: 200,
         message: "Successfully found contacts!",
@@ -52,7 +64,7 @@ export const updateContactById = async (req, res) => {
     }
     res.status(200).json({
         status: 200,
-        message: 'Successfully patched a contact!',
+        message: 'Successfully updated a contact!',
         data: contact,
     });
 };
