@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
     getContacts,
-    getContacBytId,
+    getContactById,
     createContactController,
     updateContactById,
     deleteContactById
@@ -11,12 +11,17 @@ import { validateBody } from "../middlewares/validateBody.js";
 import { createContactsSchema } from '../validation/createContactsSchema .js';
 import { updateContactsSchema } from '../validation/updateContactsSchema.js';
 import { isValidId } from "../middlewares/isValidId.js";
+import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
 
+contactsRouter.use(authenticate);
+
+contactsRouter.get('/', ctrlWrapper(getContacts));
+
 contactsRouter.get('/contacts', ctrlWrapper(getContacts));
 
-contactsRouter.get('/contacts/:contactId', isValidId, ctrlWrapper(getContacBytId));
+contactsRouter.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactById));
 
 contactsRouter.post('/contacts', validateBody(createContactsSchema), ctrlWrapper(createContactController));
 
