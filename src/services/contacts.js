@@ -2,21 +2,21 @@ import { Contact } from '../model/contacts.js'
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
-export const createContact = async (payload) => {
-    const contact = await Contact.create(payload);
+export const createContact = async (payload, userId) => {
+    const contact = await Contact.create(...payload, userId);
     return contact;
 };
 
-export const updateContact = async (contactId, payload) => {
-    const contact = await Contact.findOneAndUpdate({ _id: contactId }, payload,
+export const updateContact = async (contactId, payload, userId) => {
+    const contact = await Contact.findOneAndUpdate({ _id: contactId, userId }, payload,
         { new: true },
     );
 
     return contact;
 };
 
-export const deleteContact = async (contactId) => {
-    const contact = await Contact.findOneAndDelete({ _id: contactId });
+export const deleteContact = async (contactId, userId) => {
+    const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
     return contact;
 };
 
@@ -25,12 +25,20 @@ export const getAllContacts = async ({
     perPage = 10,
     sortOrder = SORT_ORDER.ASC,
     sortBy = '_id',
+    userId,
 }) => {
     const limit = perPage;
     const skip = (page - 1) * perPage;
 
-    const contactsQuery = Contact.find();
-    const contactsCount = await Contact.find()
+    const filter = { userId };
+
+
+    if (type) filter.contactType = type;
+    if (typeof isFavourite !== 'undefined') filter.isFavourite = isFavourite;
+
+
+    const contactsQuery = Contact.find(filter);
+    const contactsCount = await Contact.find(filter)
         .merge(contactsQuery)
         .countDocuments();
 
