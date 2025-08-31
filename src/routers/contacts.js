@@ -19,15 +19,13 @@ contactsRouter.use(authenticate);
 
 contactsRouter.get('/', ctrlWrapper(getContacts));
 
-contactsRouter.get('/contacts', ctrlWrapper(getContacts));
+contactsRouter.get('/:contactId', isValidId, ctrlWrapper(getContactById));
 
-contactsRouter.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactById));
+contactsRouter.post('/', validateBody(createContactsSchema), ctrlWrapper(createContactController));
 
-contactsRouter.post('/contacts', validateBody(createContactsSchema), ctrlWrapper(createContactController));
+contactsRouter.patch('/:contactId', isValidId, validateBody(updateContactsSchema), ctrlWrapper(updateContactById));
 
-contactsRouter.patch('/contacts/:contactId', isValidId, validateBody(updateContactsSchema), ctrlWrapper(updateContactById));
-
-contactsRouter.delete('/contacts/:contactId', isValidId, ctrlWrapper(deleteContactById));
+contactsRouter.delete('/:contactId', isValidId, ctrlWrapper(deleteContactById));
 
 
 

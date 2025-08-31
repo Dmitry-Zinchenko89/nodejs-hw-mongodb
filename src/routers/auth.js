@@ -8,26 +8,27 @@ import { loginUserSchema } from '../validation/auth.js';
 import { loginUserController } from '../controllers/auth.js';
 import { refreshUserSessionController } from '../controllers/auth.js';
 import { logoutUserController } from '../controllers/auth.js';
+import { authenticate } from "../middlewares/authenticate.js";
 
 
-const router = Router();
+const authRouter = Router();
 
-router.post(
+authRouter.post(
     '/register',
     validateBody(registerUserSchema),
     ctrlWrapper(registerUserController),
 );
 
 
-router.post(
+authRouter.post(
     '/login',
     validateBody(loginUserSchema),
     ctrlWrapper(loginUserController),
 );
 
-router.post('/refresh',
+authRouter.post('/refresh', authenticate,
     ctrlWrapper(refreshUserSessionController));
 
-router.post('/logout', ctrlWrapper(logoutUserController));
+authRouter.post('/logout', authenticate, ctrlWrapper(logoutUserController));
 
-export default router;
+export default authRouter;
