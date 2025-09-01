@@ -3,7 +3,8 @@ import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
 export const createContact = async (payload, userId) => {
-    const contact = await Contact.create(...payload, userId);
+    const doc = { ...payload, userId };
+    const contact = await Contact.create(doc);
     return contact;
 };
 
