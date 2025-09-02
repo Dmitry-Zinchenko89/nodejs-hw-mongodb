@@ -4,6 +4,10 @@ import { User } from '../model/user.js'
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
 import { Session } from '../model/session.js';
 import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
+import { SMTP } from '../constants/index.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { sendEmail } from '../utils/sendMail.js';
 
 
 export const registerUser = async (payload) => {
@@ -85,4 +89,38 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 
 export const logoutUser = async (sessionId) => {
     await Session.deleteOne({ _id: sessionId });
+};
+
+export const requestResetToken = async (email) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw createHttpError(404, 'User not found');
+    }
+
+    const JWT_SECRET = getEnvVar('JWT_SECRET');
+    const APP_DOMAIN = getEnvVar('APP_DOMAIN');
+
+    const token = jwt.sign(
+        { email: user.email },
+        JWT_SECRET,
+        { expiresIn: '5m' }
+    );
+
+    const resetUrl = `${APP_DOMAIN}/reset-password?token=${encodeURIComponent(token)}`;
+
+    try {
+        await sendEmail({
+            from: getEnvVar('SMTP_FROM'),
+            to: user.email,
+            subject: 'Reset your password',
+            html: `
+        <p>Hi ${user.name || ''},</p>
+        <p>Click the link below to reset your password (valid for 5 minutes):</p>
+        <p><a href="${resetUrl}">${resetUrl}</a></p>
+        <p>If you didn’t request this, you can safely ignore this email.</p>
+      `,
+        });
+    } catch (err) {
+        throw createHttpError(500, 'Failed to send the email, please try again later.');
+    }
 };
