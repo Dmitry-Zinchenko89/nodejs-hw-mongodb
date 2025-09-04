@@ -3,17 +3,16 @@ import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
 export const createContact = async (payload, userId) => {
-    const doc = { ...payload, userId };
-    const contact = await Contact.create(doc);
-    return contact;
+    return Contact.create({ ...payload, userId });
 };
 
-export const updateContact = async (contactId, payload, userId) => {
-    const contact = await Contact.findOneAndUpdate({ _id: contactId, userId }, payload,
-        { new: true },
-    );
 
-    return contact;
+export const updateContact = async (contactId, payload, userId) => {
+    return Contact.findOneAndUpdate(
+        { _id: contactId, userId },
+        payload,
+        { new: true }
+    );
 };
 
 export const deleteContact = async (contactId, userId) => {

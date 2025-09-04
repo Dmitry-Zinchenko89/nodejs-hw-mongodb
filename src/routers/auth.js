@@ -11,6 +11,9 @@ import { logoutUserController } from '../controllers/auth.js';
 import { requireSessionCookies } from '../middlewares/requireSessionCookies.js';
 import { sendResetEmailSchema } from '../validation/auth.js';
 import { sendResetEmailController } from '../controllers/auth.js';
+import { resetPasswordSchema } from '../validation/auth.js';
+import { resetPasswordController } from '../controllers/auth.js';
+
 
 
 
@@ -37,6 +40,12 @@ authRouter.post(
     '/send-reset-email',
     validateBody(sendResetEmailSchema),
     ctrlWrapper(sendResetEmailController),
+);
+
+authRouter.post(
+    '/reset-pwd',
+    validateBody(resetPasswordSchema),
+    ctrlWrapper(resetPasswordController),
 );
 
 export default authRouter;

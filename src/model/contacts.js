@@ -27,7 +27,10 @@ const contactsSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users',
         required: true,
-    }
-}, { timestamps: true });
+    },
+
+    photo: { type: String },
+
+}, { timestamps: true, versionKey: false });
 
 export const Contact = model('contacts', contactsSchema);

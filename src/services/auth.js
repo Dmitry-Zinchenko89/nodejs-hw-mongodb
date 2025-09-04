@@ -97,30 +97,58 @@ export const requestResetToken = async (email) => {
         throw createHttpError(404, 'User not found');
     }
 
-    const JWT_SECRET = getEnvVar('JWT_SECRET');
+
     const APP_DOMAIN = getEnvVar('APP_DOMAIN');
 
-    const token = jwt.sign(
-        { email: user.email },
-        JWT_SECRET,
+    const resetToken = jwt.sign(
+        {
+            sub: user._id,
+            email,
+        },
+        getEnvVar('JWT_SECRET'),
         { expiresIn: '5m' }
     );
 
-    const resetUrl = `${APP_DOMAIN}/reset-password?token=${encodeURIComponent(token)}`;
+    const resetUrl = `${APP_DOMAIN}/reset-password?token=${encodeURIComponent(resetToken)}`;
 
-    try {
-        await sendEmail({
-            from: getEnvVar('SMTP_FROM'),
-            to: user.email,
-            subject: 'Reset your password',
-            html: `
+    await sendEmail({
+        from: getEnvVar('SMTP_FROM'),
+        to: user.email,
+        subject: 'Reset your password',
+        html: `
         <p>Hi ${user.name || ''},</p>
         <p>Click the link below to reset your password (valid for 5 minutes):</p>
         <p><a href="${resetUrl}">${resetUrl}</a></p>
         <p>If you didn’t request this, you can safely ignore this email.</p>
       `,
-        });
+    });
+};
+
+export const resetPassword = async (payload) => {
+    let entries;
+
+    try {
+        entries = jwt.verify(payload.token,
+            getEnvVar('JWT_SECRET'));
     } catch (err) {
-        throw createHttpError(500, 'Failed to send the email, please try again later.');
+        if (err instanceof Error) throw createHttpError(401, "Token is expired or invalid.");
+        throw err;
     }
+
+    const user = await User.findOne({
+        email: entries.email,
+        _id: entries.sub,
+    });
+
+
+    if (!user) {
+        throw createHttpError(404, 'User not found');
+    }
+
+    const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+    await User.updateOne(
+        { _id: user._id },
+        { password: encryptedPassword },
+    );
 };
