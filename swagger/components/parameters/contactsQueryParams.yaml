@@ -1,0 +1,69 @@
+type: array
+items:
+  oneOf:
+    - type: object
+      properties:
+        name:
+          const: page
+        in:
+          const: query
+        schema:
+          type: integer
+          minimum: 1
+        description: Номер сторінки (починається з 1)
+        example: 1
+    - type: object
+      properties:
+        name:
+          const: perPage
+        in:
+          const: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+        description: Кількість елементів на сторінці
+        example: 10
+    - type: object
+      properties:
+        name:
+          const: sortBy
+        in:
+          const: query
+        schema:
+          type: string
+          enum: [name, createdAt, updatedAt, contactType, isFavourite]
+        description: Поле сортування
+        example: name
+    - type: object
+      properties:
+        name:
+          const: sortOrder
+        in:
+          const: query
+        schema:
+          type: string
+          enum: [asc, desc]
+        description: Порядок сортування
+        example: asc
+    - type: object
+      properties:
+        name:
+          const: type
+        in:
+          const: query
+        schema:
+          type: string
+          enum: [personal, work, family, other]
+        description: Фільтр за типом контакту
+        example: work
+    - type: object
+      properties:
+        name:
+          const: isFavourite
+        in:
+          const: query
+        schema:
+          type: boolean
+        description: Фільтр за обраними
+        example: true

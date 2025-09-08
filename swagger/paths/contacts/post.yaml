@@ -1,0 +1,31 @@
+tags: [Contacts]
+summary: Create a new contact
+operationId: createContact
+description: Creates a contact for the current user.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/ContactRequest.yaml
+responses:
+  "201":
+    description: Created
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ContactResponse.yaml
+  "400":
+    description: Invalid body
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ErrorResponse.yaml
+  "401":
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ErrorResponse.yaml

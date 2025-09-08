@@ -1,0 +1,16 @@
+type: object
+properties:
+  status:
+    type: integer
+    example: 404
+  message:
+    type: string
+    example: "Contact not found"
+  errors:
+    type: array
+    items:
+      type: object
+      properties:
+        message:
+          type: string
+required: [ status, message ]

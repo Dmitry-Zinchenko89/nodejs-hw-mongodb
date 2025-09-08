@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts app
+  description: This is a documentation of contacts app
+servers:
+  - url: http://localhost:3000
+  - url: https://nodejs-hw-mongodb-7wns.onrender.com
+
+tags:
+  - name: Contacts
+    description: Operations about users.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /contacts:
+    get:
+      tags: [Contacts]
+      summary: Get contacts list
+      operationId: getContacts
+      description: Returns paginated contacts of the current user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1 }
+          description: Page number (1-based)
+        - name: perPage
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100 }
+          description: Page size
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [name, createdAt, updatedAt, contactType, isFavourite]
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [personal, work, family, other]
+        - name: isFavourite
+          in: query
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid query parameters
+        "401":
+          description: Unauthorized
+
+    post:
+      tags: [Contacts]
+      summary: Create a new contact
+      operationId: createContact
+      description: Creates a contact for the current user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, phoneNumber, contactType]
+              properties:
+                name: { type: string }
+                phoneNumber: { type: string }
+                email: { type: string, format: email,}
+                contactType:
+                  type: string
+                  enum: [personal, work, family, other]
+                isFavourite: { type: boolean, default: false }
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid body
+        "401":
+          description: Unauthorized
+
+  /contacts/{contactId}:
+    get:
+      tags: [Contacts]
+      summary: Get contact by ID
+      operationId: getContactById
+      description: Returns a single contact by its contactId.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: Contact ID
+          schema:
+            type: string
+            example: "66fc7f3b6f8c2a2a4e8d9f11"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "404":
+          description: Contact not found
+
+    patch:
+      tags: [Contacts]
+      summary: Update contact
+      operationId: updateContact
+      description: Partially updates contact fields.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: Contact ID
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                phoneNumber: { type: string }
+                email: { type: string, format: email,}
+                contactType:
+                  type: string
+                  enum: [personal, work, family, other]
+                isFavourite: { type: boolean }
+      responses:
+        "200":
+          description: Updated
+        "400":
+          description: Invalid body
+        "401":
+          description: Unauthorized
+        "404":
+          description: Contact not found
+
+    delete:
+      tags: [Contacts]
+      summary: Delete contact
+      operationId: deleteContact
+      description: Deletes a contact by ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: Contact ID
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Contact not found
