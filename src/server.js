@@ -9,6 +9,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerServe, swaggerSetup } from './config/swagger.js';
 
 export const setupServer = () => {
     const app = express();
@@ -20,6 +21,8 @@ export const setupServer = () => {
 
     app.use(express.json());
     app.use(cookieParser());
+
+    app.use('/api-docs', swaggerServe, swaggerSetup);
     app.use('/auth', authRouter);
     app.use('/contacts', contactsRouter);
     app.use('/uploads', express.static(UPLOAD_DIR));

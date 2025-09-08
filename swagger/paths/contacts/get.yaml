@@ -1,0 +1,52 @@
+tags: [Contacts]
+summary: Get contacts list
+operationId: getContacts
+description: Returns paginated contacts of the current user.
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    schema: { type: integer, minimum: 1 }
+    description: Page number (1-based)
+  - name: perPage
+    in: query
+    schema: { type: integer, minimum: 1, maximum: 100 }
+    description: Page size
+  - name: sortBy
+    in: query
+    schema:
+      type: string
+      enum: [name, createdAt, updatedAt, contactType, isFavourite]
+  - name: sortOrder
+    in: query
+    schema:
+      type: string
+      enum: [asc, desc]
+  - name: type
+    in: query
+    schema:
+      type: string
+      enum: [personal, work, family, other]
+  - name: isFavourite
+    in: query
+    schema: { type: boolean }
+responses:
+  "200":
+    description: OK
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ContactsListResponse.yaml
+  "400":
+    description: Invalid query parameters
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ErrorResponse.yaml
+  "401":
+    description: Unauthorized (missing or invalid token)
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ErrorResponse.yaml
