@@ -1,35 +1,43 @@
 type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+  - userId
 properties:
   _id:
+    description: "Contact's id"
     type: string
-    description: ID контакта
-    example: "66fc7f3b6f8c2a2a4e8d9f11"
+    example: 65e4decdd286b30065d54af9
   name:
+    description: "Contact's name"
     type: string
-    example: "John Doe"
+    example: 'John Doe'
   phoneNumber:
+    description: "Contact's phone"
     type: string
-    example: "+380501112233"
+    example: '+380937777777'
   email:
     type: string
-    format: email
-    example: "john.doe@example.com"
-  contactType:
-    type: string
-    description: Тип контакта
-    enum: [personal, work, family, other]
-    example: personal
+    example: dima@example.com   
   isFavourite:
     type: boolean
-    example: false
-  photoUrl:
+  contactType:
     type: string
-    format: uri
-    example: "https://res.cloudinary.com/demo/image/upload/v123/photo.jpg"
+    enum: ['work', 'home', 'personal']
+    default: 'personal'
+  userId:
+    description: "User id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+  photo:
+    description: "Link to contact's photo"
+    type: string
+    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
   createdAt:
+    description: "time of creation of the contact"
     type: string
-    format: date-time
   updatedAt:
+    description: "time of creation of the contact"
     type: string
-    format: date-time
-required: [ _id, name, phoneNumber, contactType, isFavourite, createdAt, updatedAt ]

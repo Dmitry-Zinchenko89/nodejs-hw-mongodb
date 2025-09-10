@@ -1,31 +1,69 @@
-tags: [Contacts]
-summary: Create a new contact
+
+tags:
+  - Contacts
+summary: Create contact
 operationId: createContact
-description: Creates a contact for the current user.
+description: 'Create a contact with payload'
 security:
   - bearerAuth: []
 requestBody:
-  required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: ../../components/schemas/ContactRequest.yaml
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+          - userId
+        properties:
+          name:
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            type: string
+            example: '+380937777777'
+          email:
+            type: string
+            example: dima@example.com 
+          isFavourite:
+            type: boolean
+          contactType:
+            type: string
+            enum: ['work', 'home', 'personal']
+            default: 'personal'
+          userId:
+            description: "User id"
+            type: string
+            example: 65e4decdd286b30065d54af9
+          photo:
+            description: "Link to contact's photo"
+            type: string
+            example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
 responses:
-  "201":
-    description: Created
+  '201':
+    description: Creates a contact
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/ContactResponse.yaml
-  "400":
-    description: Invalid body
-    content:
-      application/json:
-        schema:
-          $ref: ../../components/schemas/ErrorResponse.yaml
-  "401":
-    description: Unauthorized
-    content:
-      application/json:
-        schema:
-          $ref: ../../components/schemas/ErrorResponse.yaml
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact!
+            data:
+              type: object
+              $ref: '../../components/schemas/contact.yaml'
+  '400':
+    $ref: '../../components/responses/400.yaml' 
+  '401':
+    $ref: '../../components/responses/401.yaml' 
+  '500':
+    $ref: '../../components/responses/500.yaml'  
