@@ -1,7 +1,0 @@
-name: contactId
-in: path
-required: true
-description: Ідентифікатор контакту
-schema:
-  type: string
-example: "66fc7f3b6f8c2a2a4e8d9f11"
