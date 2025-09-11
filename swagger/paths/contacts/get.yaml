@@ -24,35 +24,6 @@ parameters:
     schema:
       type: string
       enum: ['asc', 'desc']
-  - in: query
-    name: name
-    schema:
-      type: string
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-  - in: query
-    name: email
-    schema:
-      type: string
-  - in: query
-    name: isFavourite
-    schema:
-      type: boolean
-  - in: query
-    name: contactType
-    schema:
-      type: string
-      enum: ['work', 'home', 'personal']
-  - in: query
-    name: userId
-    schema:
-      type: string
-  - in: query
-    name: photo
-    schema:
-      type: string
 responses:
   '200':
     description: Successfully found contacts!
